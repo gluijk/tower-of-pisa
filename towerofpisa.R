@@ -5,14 +5,14 @@
 library(Cairo)
 
 
-# Function to plot N skewed normal distributions and their sum
+# Function to plot N skewed normal distributions (each Area=1) and their sum
 plot_skew_normals_and_sum <- function(
     xi = c(-0.2, 0.2),  # x axis locations
     omega = c(1, 1),  # widths (~stdev)
     alpha = c(-4, 4),  # skewness (asymmetry)
     n = 5000, labels = FALSE  # resolution and labelling
 ) {
-    # Skewed normal distribution function
+    # Skewed normal distribution function of Area=1
     dskewnorm <- function(x, xi, omega, alpha) {
         z <- (x - xi) / omega
         2 / omega * dnorm(z) * pnorm(alpha * z)

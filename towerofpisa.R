@@ -11,7 +11,6 @@ plot_two_skew_normals_and_sum <- function(
         alpha1 = -4, alpha2 = 4,  # skewness (asymmetry)
         n = 5000, labels = FALSE
 ) {
-    
     # Skewed normal distribution function
     dskewnorm <- function(x, xi, omega, alpha) {
         z <- (x - xi) / omega

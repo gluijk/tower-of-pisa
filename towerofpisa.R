@@ -35,9 +35,9 @@ plot_two_skew_normals_and_sum <- function(
 
 # Adjustments to fit the staircase in the Tower of Pisa
 CairoPNG("plot_skew_normals.png", width=1920, height=1080)
-plot_two_skew_normals_and_sum(
-    xi1 = -3.7, xi2 = 3.7,
-    omega1 = 5, omega2 = 5,
-    alpha1 = -0.8, alpha2 = 0.8
-)
+    plot_two_skew_normals_and_sum(
+        xi1 = -3.7, xi2 = 3.7,
+        omega1 = 5, omega2 = 5,
+        alpha1 = -0.8, alpha2 = 0.8
+    )
 dev.off()

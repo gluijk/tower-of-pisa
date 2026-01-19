@@ -5,11 +5,12 @@
 library(Cairo)
 
 
-plot_two_skew_normals_and_sum <- function(
-        xi1 = -0.2, xi2 = 0.2,  # x axis location
-        omega1 = 1, omega2 = 1,  # width (~stdev)
-        alpha1 = -4, alpha2 = 4,  # skewness (asymmetry)
-        n = 5000, labels = FALSE  # resolution and labelling
+# Function to plot N skewed normal distributions and their sum
+plot_skew_normals_and_sum <- function(
+    xi = c(-0.2, 0.2),  # x axis locations
+    omega = c(1, 1),  # widths (~stdev)
+    alpha = c(-4, 4),  # skewness (asymmetry)
+    n = 5000, labels = FALSE  # resolution and labelling
 ) {
     # Skewed normal distribution function
     dskewnorm <- function(x, xi, omega, alpha) {
@@ -18,26 +19,27 @@ plot_two_skew_normals_and_sum <- function(
     }
     
     # Calculations
-    from <- min(xi1 - 5*omega1, xi2 - 5*omega2)
-    to   <- max(xi1 + 5*omega1, xi2 + 5*omega2)
+    N = length(xi)  # number of curves
+    from <- min(xi - 5*omega)
+    to   <- max(xi + 5*omega)
     x <- seq(from, to, length.out = n)
-    y1 <- dskewnorm(x, xi1, omega1, alpha1)
-    y2 <- dskewnorm(x, xi2, omega2, alpha2)
-    ysum <- y1 + y2
+    y=list()
+    for (i in 1:N) y[[i]] <- dskewnorm(x, xi[i], omega[i], alpha[i])
+    ysum <- Reduce(`+`, y)
     
     # Plotting
-    plot(x, ysum, type = "l", lwd = 9,  # ysum always >= y1, y2
+    plot(x, ysum, type = "l", lwd = 9,  # ysum always >= y[[i]]
          axes = labels, ann = labels)
-    lines(x, y1, lwd = 3, col='red')
-    lines(x, y2, lwd = 3, col='green')
+    cols <- topo.colors(N)
+    for (i in 1:N) lines(x, y[[i]], lwd = 3, col=cols[i])
 }
 
 
 # Adjustments to fit the staircase in the Tower of Pisa
 CairoPNG("plot_skew_normals.png", width=1920, height=1080)
-    plot_two_skew_normals_and_sum(
-        xi1 = -3.7, xi2 = 3.7,
-        omega1 = 5, omega2 = 5,
-        alpha1 = -0.8, alpha2 = 0.8
+    plot_skew_normals_and_sum(
+        xi = c(-3.7, 3.7),
+        omega = c(5, 5),
+        alpha = c(-0.8, 0.8)
     )
 dev.off()

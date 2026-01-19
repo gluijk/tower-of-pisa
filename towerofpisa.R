@@ -32,7 +32,7 @@ plot_two_skew_normals_and_sum <- function(
     plot(x, ysum, type = "l", lwd = 9,
          axes = labels, ann = labels)
     lines(x, y1, lwd = 4, col='red')
-    lines(x, y2, lwd = 4, col='blue')
+    lines(x, y2, lwd = 4, col='green')
 }
 
 
@@ -44,3 +44,4 @@ plot_two_skew_normals_and_sum(
     alpha1 = -0.8, alpha2 = 0.8
 )
 dev.off()
+

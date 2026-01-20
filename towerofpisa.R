@@ -5,14 +5,17 @@
 library(Cairo)
 
 
-# Function to plot N skewed normal distributions (each Area=1) and their sum
+# Function to plot N skewed weighted normal distributions and their sum
 plot_skew_normals_and_sum <- function(
-    xi = c(-0.2, 0.2),  # x axis locations
-    omega = c(1, 1),  # widths (~stdev)
-    alpha = c(-4, 4),  # skewness (asymmetry)
-    n = 5000, labels = FALSE  # resolution and labelling
+        xi = c(-0.2, 0.2),  # x axis locations
+        omega = c(1, 1),  # widths (~stdev)
+        alpha = c(-4, 4),  # skewness (asymmetry)
+        weight = c(1, 1),  # normalization weights
+        # When the sum of weights=1 the output sum distribution will be a valid
+        # normalized probability density function with Area=1
+        n = 5000, labels = FALSE  # resolution and labelling
 ) {
-    # Skewed normal distribution function of Area=1
+    # Skewed normal distribution function
     dskewnorm <- function(x, xi, omega, alpha) {
         z <- (x - xi) / omega
         2 / omega * dnorm(z) * pnorm(alpha * z)
@@ -24,12 +27,12 @@ plot_skew_normals_and_sum <- function(
     to   <- max(xi + 5*omega)
     x <- seq(from, to, length.out = n)
     y=list()
-    for (i in 1:N) y[[i]] <- dskewnorm(x, xi[i], omega[i], alpha[i])
+    for (i in 1:N) y[[i]] <- weight[i] * dskewnorm(x, xi[i], omega[i], alpha[i])
     ysum <- Reduce(`+`, y)
     
     # Plotting
     plot(x, ysum, type = "l", lwd = 8,  # ysum always >= y[[i]]
-         xlab = "", ylab = "", axes = labels, ann = labels)
+         xlab = "", ylab = "", axes = labels, ann = labels, cex.axis = 2)
     cols <- topo.colors(N)
     for (i in 1:N) lines(x, y[[i]], lwd = 3, col=cols[i])
 }
@@ -46,13 +49,13 @@ dev.off()
 
 
 # Multiple distribution example
-CairoPNG("plot_skew_normals_multi.png", width=1280, height=800)
+CairoPNG("plot_skew_normals_multi.png", width=1024, height=600)
     plot_skew_normals_and_sum(
         xi = c(-4, -2, 4, 9),
         omega = c(3, 1, 5, 4),
         alpha = c(0, 0, 0, 5),
+        weight = c(1, 1, 1, 1)/4,  # ensure sum distribution Area=1
         labels = TRUE
     )
 dev.off()
-
 

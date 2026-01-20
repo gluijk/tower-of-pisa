@@ -36,7 +36,7 @@ plot_skew_normals_and_sum <- function(
                                 SUMW, ")"))
     MINY = min(ysum)  # ensure no negative density values are reached
     if (MINY < 0) print(paste0("WARNING: sum reaches negative values (min = ",
-                           MINY, ")"))
+                               MINY, ")"))
     
     # Plotting
     ymin=min(ysum, unlist(y))  # get y axis limits

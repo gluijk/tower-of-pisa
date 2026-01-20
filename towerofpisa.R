@@ -25,18 +25,25 @@ plot_skew_normals_and_sum <- function(
     N = length(xi)  # number of curves
     from <- min(xi - 5*omega)
     to   <- max(xi + 5*omega)
-    x <- seq(from, to, length.out = n)
+    x <- seq(from, to, length.out = n)  # set x axis limits
     y=list()
     for (i in 1:N) y[[i]] <- weight[i] * dskewnorm(x, xi[i], omega[i], alpha[i])
     ysum <- Reduce(`+`, y)
+    MINY = min(ysum)
+    if (MINY<0) print(paste0("WARNING: sum reaches negative values (",
+                           MINY, ")"))
     
     # Plotting
-    plot(x, ysum, type = "l", lwd = 8,  # ysum always >= y[[i]]
+    ymin=min(ysum, unlist(y))  # get y axis limits
+    ymax=max(ysum, unlist(y))
+    plot(x, ysum, type = "l", lwd = 8, ylim = c(ymin, ymax),
          xlab = "", ylab = "", axes = labels, ann = labels, cex.axis = 2)
     cols <- topo.colors(N)
     for (i in 1:N) lines(x, y[[i]], lwd = 3, col=cols[i])
 }
 
+
+# EXAMPLES
 
 # Adjustments to fit the staircase in the Tower of Pisa
 CairoPNG("plot_skew_normals.png", width=1920, height=1080)
@@ -46,7 +53,6 @@ CairoPNG("plot_skew_normals.png", width=1920, height=1080)
         alpha = c(-0.8, 0.8)
     )
 dev.off()
-
 
 # Multiple distribution example
 CairoPNG("plot_skew_normals_multi.png", width=1024, height=600)
@@ -58,4 +64,16 @@ CairoPNG("plot_skew_normals_multi.png", width=1024, height=600)
         labels = TRUE
     )
 dev.off()
+
+# Multiple distribution example with negative weights
+CairoPNG("plot_skew_normals_multi_neg.png", width=1024, height=600)
+    plot_skew_normals_and_sum(
+        xi = c(-4, -2, 4, 9),
+        omega = c(3, 1, 5, 4),
+        alpha = c(0, 0, 0, 5),
+        weight = c(0.15, -0.1, 1, -0.05),  # ensure sum distribution Area=1
+        labels = TRUE
+    )
+dev.off()
+
 

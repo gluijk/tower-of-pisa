@@ -28,8 +28,8 @@ plot_skew_normals_and_sum <- function(
     ysum <- Reduce(`+`, y)
     
     # Plotting
-    plot(x, ysum, type = "l", lwd = 9,  # ysum always >= y[[i]]
-         axes = labels, ann = labels)
+    plot(x, ysum, type = "l", lwd = 8,  # ysum always >= y[[i]]
+         xlab = "", ylab = "", axes = labels, ann = labels, cex = 12)
     cols <- topo.colors(N)
     for (i in 1:N) lines(x, y[[i]], lwd = 3, col=cols[i])
 }
@@ -41,5 +41,16 @@ CairoPNG("plot_skew_normals.png", width=1920, height=1080)
         xi = c(-3.7, 3.7),
         omega = c(5, 5),
         alpha = c(-0.8, 0.8)
+    )
+dev.off()
+
+
+# Multiple distribution example
+CairoPNG("plot_skew_normals_multi.png", width=512, height=400)
+    plot_skew_normals_and_sum(
+        xi = c(-4, -2, 4, 9),
+        omega = c(3, 1, 5, 4),
+        alpha = c(0, 0, 0, 5),
+        labels = TRUE
     )
 dev.off()

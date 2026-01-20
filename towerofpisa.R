@@ -29,8 +29,13 @@ plot_skew_normals_and_sum <- function(
     y=list()
     for (i in 1:N) y[[i]] <- weight[i] * dskewnorm(x, xi[i], omega[i], alpha[i])
     ysum <- Reduce(`+`, y)
-    MINY = min(ysum)
-    if (MINY<0) print(paste0("WARNING: sum reaches negative values (",
+    
+    # Sanity checks
+    SUMW = sum(weight)  # ensure sum distribution Area=1
+    if (SUMW != 1) print(paste0("WARNING: weights do not sum 1 (sum = ",
+                                SUMW, ")"))
+    MINY = min(ysum)  # ensure no negative density values are reached
+    if (MINY < 0) print(paste0("WARNING: sum reaches negative values (min = ",
                            MINY, ")"))
     
     # Plotting
